@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "HomeScene.init() -&gt; HomeScene:HomeScene.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Device.getAssetByKey(&quot;bgCenario&quot;)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "HelloWorldScene.update(Double) -&gt; ():HelloWorldScene.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.paralaxNode?.convertToWorldSpace((self.paralaxNode?.position)!)">
+            </PersistentString>
+            <PersistentString
+               value = "planoFundo?.contentSize.width">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
