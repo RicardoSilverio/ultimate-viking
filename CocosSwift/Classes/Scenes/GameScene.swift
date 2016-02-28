@@ -7,13 +7,16 @@
 //
 
 import Foundation
-class GameScene : CCScene {
+class GameScene : CCScene, PirataDelegate {
     
     private var canPlay:Bool = true
     private var canThrowAxe = true
     
     private var player:CCSprite?
     private var linhaEnergia:CCSprite?
+    
+    private var delayGeracaoPiratas:Double = 4
+    private var physicsWorld = CCPhysicsNode()
     
     
     override init() {
@@ -28,7 +31,7 @@ class GameScene : CCScene {
         player!.anchorPoint = CGPointMake(0.5, 0.5)
         player!.position = CGPointMake(CGFloat(Device.getAssetDimensionByKey("viking:margin:Game")), Device.screenSize.height / 2)
         player!.scale = Device.getAssetDimensionByKey("viking:Game")
-        self.addChild(player, z: 3)
+        physicsWorld.addChild(player, z: 4)
         
         linhaEnergia = CCSprite(imageNamed: Device.getAssetByKey("energiaVerde"))
         linhaEnergia!.anchorPoint = CGPointMake(0, 0)
@@ -36,6 +39,7 @@ class GameScene : CCScene {
         self.addChild(linhaEnergia, z: 2)
         
         self.userInteractionEnabled = true
+        addChild(physicsWorld, z:3)
         
     }
     
@@ -100,8 +104,41 @@ class GameScene : CCScene {
     override func onEnter() {
         
         super.onEnter()
+        
+        gerarPirata()
     }
     
+    func gerarPirata() {
+        
+        let pirataGerado = arc4random_uniform(10) + 1
+        var pirata:Pirata
+        if(pirataGerado > 3) {
+            pirata = Pirata(imageNamed: SpriteMap.PirataPeixeFrame.rawValue, aQtdFrames: 18, initialSpeed: 6, initialHealth: 3, scoreGenerated: 3)
+        } else {
+            pirata = Pirata(imageNamed: SpriteMap.PirataPernetaFrame.rawValue, aQtdFrames: 18, initialSpeed: 3, initialHealth: 7, scoreGenerated: 7)
+        }
+        pirata.anchorPoint = CGPointMake(0.5, 0.5)
+        pirata.position = CGPointMake(Device.screenSize.width + pirata.boundingBox().width / 2,
+            CGFloat(arc4random_uniform(UInt32((linhaEnergia?.boundingBox().height)!) - UInt32(pirata.boundingBox().width / 2)) + UInt32(pirata.boundingBox().width / 2)))
+        pirata.delegate = self
+        if(pirata.position.y < player!.position.y) {
+            physicsWorld.addChild(pirata, z: 4)
+        } else {
+            physicsWorld.addChild(pirata, z: 3)
+        }
+        pirata.mover(CGPointMake(0, pirata.position.y))
+        DelayHelper.sharedInstance.callFunc("gerarPirata", onTarget: self, withDelay: delayGeracaoPiratas)
+        
+    }
+    
+    func powerUPGerado() {
+        
+    }
+    
+    func powerUPConsumido() {
+        
+    }
+
     override func update(delta: CCTime) {
         
     }

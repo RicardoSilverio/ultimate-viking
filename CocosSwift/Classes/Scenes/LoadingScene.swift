@@ -47,6 +47,7 @@ class LoadingScene : CCScene {
                 Device.putAssetDimensionKey("viking:margin:Game", withValue: 75)
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 2.5)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 2.5)
+                Device.putAssetDimensionKey("pirata:Game", withValue: 1)
             case ScreenType.iPhonePlus:
                 Device.putAssetKey("cenario", withValue: SpriteMap.CenarioPlus)
                 Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerdePlus)
@@ -60,6 +61,7 @@ class LoadingScene : CCScene {
                 Device.putAssetDimensionKey("viking:margin:Game", withValue: 35)
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 1)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 1)
+                Device.putAssetDimensionKey("pirata:Game", withValue: 0.4)
             case ScreenType.iPhone5:
                 Device.putAssetKey("cenario", withValue: SpriteMap.Cenario5)
                 Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerde5)
@@ -73,6 +75,7 @@ class LoadingScene : CCScene {
                 Device.putAssetDimensionKey("viking:margin:Game", withValue: 35)
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 0.5)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 0.5)
+                Device.putAssetDimensionKey("pirata:Game", withValue: 0.25)
             default:
                 Device.putAssetKey("cenario", withValue: SpriteMap.Cenario4s)
                 Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerde4s)
@@ -86,6 +89,8 @@ class LoadingScene : CCScene {
                 Device.putAssetDimensionKey("viking:margin:Game", withValue: 35)
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 0.5)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 0.5)
+                Device.putAssetDimensionKey("pirata:Game", withValue: 0.25)
+
         }
         
         SoundplayHelper.sharedInstance.preloadSoundsAndMusic()
