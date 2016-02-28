@@ -28,89 +28,79 @@ class LoadingScene : CCScene {
        
         super.onEnter()
         
-        CCFileUtils.sharedFileUtils().setiPadRetinaDisplaySuffix("")
-        CCFileUtils.sharedFileUtils().setiPadSuffix("")
-        CCFileUtils.sharedFileUtils().setiPhoneRetinaDisplaySuffix("")
+        SoundplayHelper.sharedInstance.stopEverything()
         
+        CCSpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(SpriteMap.PirataPeixeSheet.rawValue)
+        CCSpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(SpriteMap.PirataPernetaSheet.rawValue)
         
-        OALSimpleAudio.sharedInstance().stopEverything()
-        
-        if(Device.isHDResolution()) {
-            Device.putAssetKey("bgCenario", withValue: "bgCenario-ipadhd.png")
-            
-            Device.putAssetKey("player", withValue: "player-ipadhd.png")
-            Device.putAssetKey("tiro", withValue: "tiro-ipadhd.png")
-            
-            Device.putAssetKey("PirataPeixe", withValue: "PirataPeixe-ipadhd.plist")
-            Device.putAssetKey("PirataPerneta", withValue: "PirataPerneta-ipadhd.plist")
-            
-            Device.putAssetKey("energiaVerde", withValue: "energiaVerde-ipadhd.png")
-            Device.putAssetKey("energiaAmarela", withValue: "energiaAmarela-ipadhd.png")
-            Device.putAssetKey("energiaVermelha", withValue: "energiaVermelha-ipadhd.png")
-            
-            Device.putAssetKey("powerUP", withValue: "powerUP-ipadhd.png")
-            Device.putAssetKey("fire", withValue: "fire-ipadhd.png")
-            
-            
-        } else {
-            Device.putAssetKey("bgCenario", withValue: "bgCenario-ipad.png")
-            
-            Device.putAssetKey("player", withValue: "player-ipad.png")
-            Device.putAssetKey("tiro", withValue: "tiro-ipad.png")
-            
-            Device.putAssetKey("PirataPeixe", withValue: "PirataPeixe-ipad.plist")
-            Device.putAssetKey("PirataPerneta", withValue: "PirataPerneta-ipad.plist")
-            
-            Device.putAssetKey("energiaVerde", withValue: "energiaVerde-ipad.png")
-            Device.putAssetKey("energiaAmarela", withValue: "energiaAmarela-ipad.png")
-            Device.putAssetKey("energiaVermelha", withValue: "energiaVermelha-ipad.png")
-            
-            Device.putAssetKey("powerUP", withValue: "powerUP-ipad.png")
-            Device.putAssetKey("fire", withValue: "fire-ipad.png")
-        }
-        
-        CCSpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(Device.getAssetByKey("PirataPeixe"))
-        CCSpriteFrameCache.sharedSpriteFrameCache().addSpriteFramesWithFile(Device.getAssetByKey("PirataPerneta"))
-        
-        switch(Device.getDeviceType()) {
-            case DeviceType.iPad :
+        switch(Device.getScreenType()) {
+            case ScreenType.iPad:
+                Device.putAssetKey("cenario", withValue: SpriteMap.Cenario)
+                Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerde)
+                Device.putAssetKey("energiaAmarela", withValue: SpriteMap.EnergiaAmarela)
+                Device.putAssetKey("energiaVermelha", withValue: SpriteMap.EnergiaVermelha)
                 Device.putAssetDimensionKey("title:Home", withValue: 72)
                 Device.putAssetDimensionKey("button:Home", withValue: 38)
                 Device.putAssetDimensionKey("highScore:Home", withValue: 38)
                 Device.putAssetDimensionKey("viking:Home", withValue: 2.5)
+                Device.putAssetDimensionKey("viking:Game", withValue: 1.2)
+                Device.putAssetDimensionKey("viking:margin:Game", withValue: 75)
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 2.5)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 2.5)
-            case DeviceType.iPhone5 :
+            case ScreenType.iPhonePlus:
+                Device.putAssetKey("cenario", withValue: SpriteMap.CenarioPlus)
+                Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerdePlus)
+                Device.putAssetKey("energiaAmarela", withValue: SpriteMap.EnergiaAmarelaPlus)
+                Device.putAssetKey("energiaVermelha", withValue: SpriteMap.EnergiaVermelhaPlus)
                 Device.putAssetDimensionKey("title:Home", withValue: 35)
                 Device.putAssetDimensionKey("button:Home", withValue: 24)
                 Device.putAssetDimensionKey("highScore:Home", withValue: 24)
                 Device.putAssetDimensionKey("viking:Home", withValue: 1)
+                Device.putAssetDimensionKey("viking:Game", withValue: 0.5)
+                Device.putAssetDimensionKey("viking:margin:Game", withValue: 35)
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 1)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 1)
-            default :
+            case ScreenType.iPhone5:
+                Device.putAssetKey("cenario", withValue: SpriteMap.Cenario5)
+                Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerde5)
+                Device.putAssetKey("energiaAmarela", withValue: SpriteMap.EnergiaAmarela5)
+                Device.putAssetKey("energiaVermelha", withValue: SpriteMap.EnergiaVermelha5)
                 Device.putAssetDimensionKey("title:Home", withValue: 35)
                 Device.putAssetDimensionKey("button:Home", withValue: 24)
                 Device.putAssetDimensionKey("highScore:Home", withValue: 24)
-                Device.putAssetDimensionKey("viking:Home", withValue: 1)
-                Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 1)
-                Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 1)
+                Device.putAssetDimensionKey("viking:Home", withValue: 1.8)
+                Device.putAssetDimensionKey("viking:Game", withValue: 1)
+                Device.putAssetDimensionKey("viking:margin:Game", withValue: 35)
+                Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 0.5)
+                Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 0.5)
+            default:
+                Device.putAssetKey("cenario", withValue: SpriteMap.Cenario4s)
+                Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerde4s)
+                Device.putAssetKey("energiaAmarela", withValue: SpriteMap.EnergiaAmarela4s)
+                Device.putAssetKey("energiaVermelha", withValue: SpriteMap.EnergiaVermelha4s)
+                Device.putAssetDimensionKey("title:Home", withValue: 35)
+                Device.putAssetDimensionKey("button:Home", withValue: 24)
+                Device.putAssetDimensionKey("highScore:Home", withValue: 24)
+                Device.putAssetDimensionKey("viking:Home", withValue: 1.8)
+                Device.putAssetDimensionKey("viking:Game", withValue: 1)
+                Device.putAssetDimensionKey("viking:margin:Game", withValue: 35)
+                Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 0.5)
+                Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 0.5)
         }
         
-        
-        Device.putAssetKey("music", withValue: "MusicInGame.mp3")
-        Device.putAssetKey("tap", withValue: "SoundFXButtonTap.mp3")
-        Device.putAssetKey("puf", withValue: "SoundFXPuf.mp3")
-        
-        OALSimpleAudio.sharedInstance().preloadBg(Device.getAssetByKey("music"))
-        OALSimpleAudio.sharedInstance().preloadEffect(Device.getAssetByKey("tap"))
-        OALSimpleAudio.sharedInstance().preloadEffect(Device.getAssetByKey("puf"))
+        SoundplayHelper.sharedInstance.preloadSoundsAndMusic()
         
         if(NSUserDefaults.standardUserDefaults().valueForKey("highScore") == nil) {
             NSUserDefaults.standardUserDefaults().setInteger(0, forKey: "highScore")
         }
         
-        OALSimpleAudio.sharedInstance().playEffect(Device.getAssetByKey("tap"))
-        StateMachine.sharedInstance.changeScene(StateMachineScenes.HomeScene, isFade: true)
+        SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
+        DelayHelper.sharedInstance.callFunc("changeScene", onTarget: self, withDelay: 1)
+        
+    }
+    
+    func changeScene() {
+        StateMachine.sharedInstance.changeScene(StateMachineScenes.HomeScene, isFade: false)
     }
     
     override func update(delta: CCTime) {

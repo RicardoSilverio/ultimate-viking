@@ -12,7 +12,11 @@ class HomeScene : CCScene {
 	override init() {
 		super.init()
 
-        let background = CCSprite(imageNamed: Device.getAssetByKey("bgCenario"))
+        let cenario = (Device.getScreenType() == ScreenType.iPhone4s ? SpriteMap.Cenario4s :
+            Device.getScreenType() == ScreenType.iPhone5 ? SpriteMap.Cenario5 :
+            Device.getScreenType() == ScreenType.iPhonePlus ? SpriteMap.CenarioPlus :
+            SpriteMap.Cenario)
+        let background = CCSprite(imageNamed: cenario.rawValue)
         background.anchorPoint = CGPointMake(0.5, 0.5)
         background.position = CGPointMake(Device.screenSize.width / 2, Device.screenSize.height / 2)
         self.addChild(background)
@@ -23,19 +27,19 @@ class HomeScene : CCScene {
         labelTitle.color = CCColor.blackColor()
         self.addChild(labelTitle, z: 2)
         
-        let spriteViking = CCSprite(imageNamed: Device.getAssetByKey("player"))
+        let spriteViking = CCSprite(imageNamed: SpriteMap.Player.rawValue)
         spriteViking.anchorPoint = CGPointMake(0.5, 0.5)
         spriteViking.position = CGPointMake(Device.screenSize.width * 0.25, Device.screenSize.height / 2)
         spriteViking.scale = Device.getAssetDimensionByKey("viking:Home")
         self.addChild(spriteViking, z: 2)
         
-        let spritePirataPerneta = CCSprite(spriteFrame: CCSpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName("Pirata 10001.png"))
+        let spritePirataPerneta = CCSprite(spriteFrame: CCSpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName(SpriteMap.PirataPernetaFrame.rawValue + "01.png"))
         spritePirataPerneta.anchorPoint = CGPointMake(0.5, 0.5)
         spritePirataPerneta.position = CGPointMake(Device.screenSize.width - (Device.screenSize.width * 0.1), spriteViking.position.y + (spriteViking.position.y * 0.25))
         spritePirataPerneta.scale = Device.getAssetDimensionByKey("pirataPerneta:Home")
         self.addChild(spritePirataPerneta, z: 2)
         
-        let spritePirataPeixe = CCSprite(spriteFrame: CCSpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName("Pirata 20001.png"))
+        let spritePirataPeixe = CCSprite(spriteFrame: CCSpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName(SpriteMap.PirataPeixeFrame.rawValue + "01.png"))
         spritePirataPeixe.anchorPoint = CGPointMake(0.5, 0.5)
         spritePirataPeixe.position = CGPointMake(Device.screenSize.width - (Device.screenSize.width * 0.25), spriteViking.position.y - (spriteViking.position.y * 0.25))
         spritePirataPeixe.scale = Device.getAssetDimensionByKey("pirataPeixe:Home")
@@ -46,7 +50,9 @@ class HomeScene : CCScene {
         toGameButton.anchorPoint = CGPointMake(0.5, 0.5)
         toGameButton.color = CCColor.blackColor()
         toGameButton.block = {_ in
-
+            SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
+            SoundplayHelper.sharedInstance.playMusic()
+            StateMachine.sharedInstance.changeScene(StateMachineScenes.GameScene, isFade: false)
         }
         self.addChild(toGameButton, z:2)
         
@@ -57,8 +63,6 @@ class HomeScene : CCScene {
         labelHighScore.color = CCColor.blackColor()
         self.addChild(labelHighScore, z: 2)
         
-        
-        //CCSpriteFrameCache.sharedSpriteFrameCache().spriteFrameByName(name)
 	}
 
 	override func onEnter() {
@@ -72,5 +76,11 @@ class HomeScene : CCScene {
 	override func onExit() {
 		
 		super.onExit()
+
 	}
+    
+    deinit {
+        CCTextureCache.sharedTextureCache().removeAllTextures()
+    }
+
 }
