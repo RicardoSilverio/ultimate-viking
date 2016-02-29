@@ -193,6 +193,7 @@
 		12F88AE919DDA1D20001531E /* CCEffectSaturation.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F88AD719DDA1D20001531E /* CCEffectSaturation.m */; };
 		12F88AEA19DDA1D20001531E /* CCEffectStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F88ADA19DDA1D20001531E /* CCEffectStack.m */; };
 		12F88AEB19DDA1D20001531E /* CCEffectUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F88ADD19DDA1D20001531E /* CCEffectUtils.m */; };
+		A4140EF81C83BD7A00D364EA /* tiro.png in Resources */ = {isa = PBXBuildFile; fileRef = A4140EF71C83BD7A00D364EA /* tiro.png */; };
 		A49E10871C78F853009C212B /* bgCenario-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = A49E106A1C78F853009C212B /* bgCenario-ipadhd.png */; };
 		A49E10881C78F853009C212B /* energiaAmarela-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = A49E106B1C78F853009C212B /* energiaAmarela-ipadhd.png */; };
 		A49E10891C78F853009C212B /* energiaVerde-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = A49E106C1C78F853009C212B /* energiaVerde-ipadhd.png */; };
@@ -658,6 +659,7 @@
 		12F88ADB19DDA1D20001531E /* CCEffectStackProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCEffectStackProtocol.h; path = Libraries/cocos2d/CCEffectStackProtocol.h; sourceTree = "<group>"; };
 		12F88ADC19DDA1D20001531E /* CCEffectUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCEffectUtils.h; path = Libraries/cocos2d/CCEffectUtils.h; sourceTree = "<group>"; };
 		12F88ADD19DDA1D20001531E /* CCEffectUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCEffectUtils.m; path = Libraries/cocos2d/CCEffectUtils.m; sourceTree = "<group>"; };
+		A4140EF71C83BD7A00D364EA /* tiro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tiro.png; sourceTree = "<group>"; };
 		A49E106A1C78F853009C212B /* bgCenario-ipadhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bgCenario-ipadhd.png"; sourceTree = "<group>"; };
 		A49E106B1C78F853009C212B /* energiaAmarela-ipadhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "energiaAmarela-ipadhd.png"; sourceTree = "<group>"; };
 		A49E106C1C78F853009C212B /* energiaVerde-ipadhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "energiaVerde-ipadhd.png"; sourceTree = "<group>"; };
@@ -1646,6 +1648,7 @@
 				A49E10801C78F853009C212B /* player-ipad.png */,
 				A49E10811C78F853009C212B /* powerUP-ipad.png */,
 				AC2ABBA71C81043700ADA4F5 /* powerUP.png */,
+				A4140EF71C83BD7A00D364EA /* tiro.png */,
 				A49E10821C78F853009C212B /* tiro-ipad.png */,
 			);
 			path = Normal;
@@ -1808,6 +1811,7 @@
 				AC319C071C7E90ED00F6EC6F /* energiaAmarela.png in Resources */,
 				1255545019C0D90600EC663C /* Default-Landscape~ipad.png in Resources */,
 				AC2ABBA41C8102CC00ADA4F5 /* player.png in Resources */,
+				A4140EF81C83BD7A00D364EA /* tiro.png in Resources */,
 				A49E108F1C78F853009C212B /* PirataPerneta-ipadhd.png in Resources */,
 				AC319C0F1C7E91BE00F6EC6F /* energiaVermelha.png in Resources */,
 				A4F521AF1C8201BF003BCC7A /* PirataPerneta.plist in Resources */,

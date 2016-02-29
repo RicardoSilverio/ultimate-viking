@@ -41,6 +41,8 @@ class GameScene : CCScene, PirataDelegate {
         self.userInteractionEnabled = true
         addChild(physicsWorld, z:3)
         
+        self.userInteractionEnabled = true
+        
     }
     
     func getFinalX(point:CGPoint, distance:CGFloat, finalHeight:CGFloat) -> CGFloat {
@@ -86,19 +88,43 @@ class GameScene : CCScene, PirataDelegate {
     }
     
     override func touchBegan(touch: UITouch!, withEvent event: UIEvent!) {
-        var point = CCDirector.sharedDirector().convertTouchToGL(touch)
-        let finalHeight = (point.y > player!.position.y) ? Device.screenSize.height - player!.position.y :  player!.position.y
-        let distance = ccpDistance(player!.position, point)
-        var pointY = point.y
-        if(point.y > player!.position.y) {
-            pointY = point.y -  player!.position.y
-        } else {
-            pointY = player!.position.y - point.y
-        }
+        if(canThrowAxe) {
+            canThrowAxe = false
+            var point = CCDirector.sharedDirector().convertTouchToGL(touch)
+            let finalHeight = (point.y > player!.position.y) ? Device.screenSize.height - player!.position.y :  player!.position.y
+            let distance = ccpDistance(player!.position, point)
+            var pointY = point.y
+            var atirouPraCima = false
+            if(point.y > player!.position.y) {
+                atirouPraCima = true
+                pointY = point.y -  player!.position.y
+            } else {
+                pointY = player!.position.y - point.y
+            }
         
-        point = CGPointMake(point.x - player!.position.x, pointY)
-        let finalX = getFinalX(point, distance: distance, finalHeight: finalHeight)
-        print("Final X: \(finalX + player!.position.x)")
+            point = CGPointMake(point.x - player!.position.x, pointY)
+            let finalX = getFinalX(point, distance: distance, finalHeight: finalHeight)
+            print("Final X: \(finalX + player!.position.x)")
+            
+            let alvo = CGPointMake(finalX + player!.position.x, atirouPraCima ? Device.screenSize.height : 0)
+            let tempoDeslocamento = getTempoDeslocamento(player!.position, fim: alvo, velocidadePorSegundo: Device.screenSize.width * 0.5)
+            
+            let tiro = Tiro(imageNamed: SpriteMap.Tiro.rawValue,
+                alvo: alvo, tempoDeslocamento: tempoDeslocamento)
+            tiro.anchorPoint = CGPointMake(0.5, 0.5)
+            tiro.position = CGPointMake(player!.position.x + tiro.contentSize.width / 2, player!.position.y)
+            
+            physicsWorld.addChild(tiro, z:4)
+            tiro.lancar()
+            DelayHelper.sharedInstance.callBlock({ () -> Void in
+                self.canThrowAxe = true
+            }, withDelay: 0.5)
+        }
+    }
+    
+    func getTempoDeslocamento(inicio:CGPoint, fim:CGPoint, velocidadePorSegundo:CGFloat) -> CGFloat {
+        let tempo = CGFloat(ccpDistance(inicio, fim) / velocidadePorSegundo)
+        return tempo
     }
     
     override func onEnter() {
