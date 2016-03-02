@@ -48,6 +48,9 @@ class LoadingScene : CCScene {
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 2.5)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 2.5)
                 Device.putAssetDimensionKey("pirata:Game", withValue: 1)
+                Device.putAssetDimensionKey("tiro:Game", withValue: 1)
+                Device.putAssetDimensionKey("score:Game", withValue: 20)
+                Device.putAssetDimensionKey("button:Game", withValue: 20)
             case ScreenType.iPhonePlus:
                 Device.putAssetKey("cenario", withValue: SpriteMap.CenarioPlus)
                 Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerdePlus)
@@ -62,6 +65,9 @@ class LoadingScene : CCScene {
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 1)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 1)
                 Device.putAssetDimensionKey("pirata:Game", withValue: 0.4)
+                Device.putAssetDimensionKey("tiro:Game", withValue: 0.5)
+                Device.putAssetDimensionKey("score:Game", withValue: 12)
+                Device.putAssetDimensionKey("button:Game", withValue: 12)
             case ScreenType.iPhone5:
                 Device.putAssetKey("cenario", withValue: SpriteMap.Cenario5)
                 Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerde5)
@@ -76,6 +82,9 @@ class LoadingScene : CCScene {
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 0.5)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 0.5)
                 Device.putAssetDimensionKey("pirata:Game", withValue: 0.25)
+                Device.putAssetDimensionKey("tiro:Game", withValue: 1)
+                Device.putAssetDimensionKey("score:Game", withValue: 15)
+                Device.putAssetDimensionKey("button:Game", withValue: 15)
             default:
                 Device.putAssetKey("cenario", withValue: SpriteMap.Cenario4s)
                 Device.putAssetKey("energiaVerde", withValue: SpriteMap.EnergiaVerde4s)
@@ -90,7 +99,8 @@ class LoadingScene : CCScene {
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 0.5)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 0.5)
                 Device.putAssetDimensionKey("pirata:Game", withValue: 0.25)
-
+                Device.putAssetDimensionKey("score:Game", withValue: 15)
+                Device.putAssetDimensionKey("button:Game", withValue: 15)
         }
         
         SoundplayHelper.sharedInstance.preloadSoundsAndMusic()

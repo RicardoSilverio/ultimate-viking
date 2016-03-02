@@ -84,30 +84,28 @@ class Pirata : CCNode {
         self.runAction(action)
     }
     
-    private func gerarParticulas() {
-        let splash = CCParticleExplosion(totalParticles: 400)
-        splash.texture = CCSprite.spriteWithImageNamed(SpriteMap.Fire.rawValue).texture
-        splash.position = CGPointMake(0, 0)
-        splash.startColor = CCColor.orangeColor()
-        splash.endColor = CCColor.redColor()
-        splash.anchorPoint = CGPointMake(0, 0)
-        splash.autoRemoveOnFinish = true
-        self.addChild(splash, z: 3)
-    }
-    
     func receberDano(dano:Int, podeGerarPowerUP:Bool) -> Int {
         if(isAlive) {
             health! -= dano
             if(health! <= 0) {
                 isAlive = false
-                gerarParticulas()
+                
                 sprite!.stopAllActions()
                 self.stopAllActions()
                 
                 let indicePowerUP = arc4random_uniform(10) + 1
                 if(podeGerarPowerUP && indicePowerUP == 10) {
                     isPowerUP = true
+                    sprite!.removeFromParentAndCleanup(true)
                     sprite = CCSprite(imageNamed: SpriteMap.PowerUp.rawValue)
+                    sprite!.position = CGPointMake(0, 0)
+                    sprite!.anchorPoint = CGPointMake(0, 0)
+                    sprite!.scale = Device.getAssetDimensionByKey("tiro:Game")
+                    self.addChild(self.sprite, z: 3)
+                    
+                    self.physicsBody.collisionMask = []
+                    self.physicsBody.collisionCategories = []
+                    
                     self.delegate?.powerUPGerado()
                 } else {
                     sprite!.visible = false
@@ -116,13 +114,16 @@ class Pirata : CCNode {
                     }, withDelay: 2)
 
                 }
-
                 return scoreGenerated!
             }
             
         }
         
         return 0
+    }
+    
+    func getAlive() -> Bool {
+        return isAlive
     }
     
     override func touchBegan(touch: UITouch!, withEvent event: UIEvent!) {
