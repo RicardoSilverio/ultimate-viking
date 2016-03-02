@@ -67,6 +67,8 @@ class HomeScene : CCScene {
 
 	override func onEnter() {
 		super.onEnter()
+        
+        SoundplayHelper.sharedInstance.stopMusic()
 	}
     
     override func update(delta: CCTime) {

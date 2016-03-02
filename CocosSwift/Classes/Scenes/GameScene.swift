@@ -31,6 +31,9 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
     private var btnPause:CCButton?
     private var btnQuit:CCButton?
     
+    private var labelPauseGameOver:CCLabelTTF?
+    private var threashould:Int = 50
+    private var life = 3
     
     
     override init() {
@@ -44,13 +47,14 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         labelScore!.color = CCColor.blackColor()
         self.addChild(labelScore, z: 5)
         
-        let label:CCLabelTTF = CCLabelTTF(string:"Game Over - Tap to back to menu", fontName:"Verdana", fontSize:42.0)
-        label.color = CCColor.redColor()
-        label.shadowColor = CCColor.blackColor()
-        label.shadowOffset = CGPointMake(2.0, -2.0)
-        label.position = CGPointMake(self.screenSize.width/2, self.screenSize.height/2)
-        label.anchorPoint = CGPointMake(0.5, 0.5)
-        self.addChild(label, z: 4)
+        labelPauseGameOver = CCLabelTTF(string:"", fontName:"Verdana", fontSize:CGFloat(Device.getAssetDimensionByKey("label:Game")))
+        labelPauseGameOver!.color = CCColor.redColor()
+        labelPauseGameOver!.shadowColor = CCColor.blackColor()
+        labelPauseGameOver!.shadowOffset = CGPointMake(2.0, -2.0)
+        labelPauseGameOver!.position = CGPointMake(Device.screenSize.width/2, Device.screenSize.height/2)
+        labelPauseGameOver!.anchorPoint = CGPointMake(0.5, 0.5)
+        labelPauseGameOver!.visible = false
+        self.addChild(labelPauseGameOver, z: 5)
 
         
         btnPause = CCButton(title: "[ Pause ]", fontName: "Verdana", fontSize: Device.getAssetDimensionByKey("button:Game"))
@@ -58,11 +62,25 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         btnPause!.anchorPoint = CGPointMake(0.5, 0.5)
         btnPause!.color = CCColor.blackColor()
         btnPause!.block = {_ in
-            CCDirector.sharedDirector().pause()
-            self.canPlay = false
-            self.isPaused = true
-            self.btnPause!.visible = false
-            self.btnQuit!.visible = false
+            if(!self.isPaused) {
+                CCDirector.sharedDirector().pause()
+                SoundplayHelper.sharedInstance.setMusicVolume(0.1)
+                SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
+                self.canPlay = false
+                self.isPaused = true
+                self.btnPause!.title = "[ Continue ]"
+                self.labelPauseGameOver!.string = "*** Game paused ***"
+                self.labelPauseGameOver!.visible = true
+            } else {
+                CCDirector.sharedDirector().resume()
+                SoundplayHelper.sharedInstance.setMusicDefaultVolume()
+                SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
+                self.canPlay = true
+                self.isPaused = false
+                self.btnPause!.title = "[ Pause ]"
+                self.labelPauseGameOver!.string = ""
+                self.labelPauseGameOver!.visible = true
+            }
         }
         self.addChild(btnPause, z:5)
         
@@ -71,6 +89,7 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         btnQuit!.anchorPoint = CGPointMake(0.5, 0.5)
         btnQuit!.color = CCColor.blackColor()
         btnQuit!.block = {_ in
+            SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
             StateMachine.sharedInstance.changeScene(StateMachineScenes.HomeScene, isFade: false)
         }
         self.addChild(btnQuit, z:5)
@@ -143,7 +162,7 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
     }
     
     override func touchBegan(touch: UITouch!, withEvent event: UIEvent!) {
-        if(canThrowAxe) {
+        if(canPlay && canThrowAxe && !isPaused) {
             canThrowAxe = false
             var point = CCDirector.sharedDirector().convertTouchToGL(touch)
             let finalHeight = (point.y > player!.position.y) ? Device.screenSize.height - player!.position.y :  player!.position.y
@@ -158,7 +177,12 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
             }
         
             point = CGPointMake(point.x - player!.position.x, pointY)
-            let finalX = getFinalX(point, distance: distance, finalHeight: finalHeight)
+            var finalX = getFinalX(point, distance: distance, finalHeight: finalHeight)
+            
+            if(finalX.isInfinite) {
+                finalX = Device.screenSize.width
+            }
+            
             print("Final X: \(finalX + player!.position.x)")
             
             let alvo = CGPointMake(finalX + player!.position.x, atirouPraCima ? Device.screenSize.height : 0)
@@ -173,8 +197,13 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
             physicsWorld.addChild(tiro, z:4)
             tiro.lancar()
             DelayHelper.sharedInstance.callBlock({ () -> Void in
-                self.canThrowAxe = true
+                if(self.canPlay) {
+                    self.canThrowAxe = true
+                }
             }, withDelay: 0.3)
+        
+        } else if(!canPlay && !isPaused) {
+             StateMachine.sharedInstance.changeScene(StateMachineScenes.HomeScene, isFade: false)
         }
     }
     
@@ -192,24 +221,26 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
     
     func gerarPirata() {
         
-        let pirataGerado = arc4random_uniform(10) + 1
-        var pirata:Pirata
-        if(pirataGerado > 3) {
-            pirata = Pirata(imageNamed: SpriteMap.PirataPeixeFrame.rawValue, aQtdFrames: 18, initialSpeed: 6, initialHealth: 3, scoreGenerated: 3)
-        } else {
-            pirata = Pirata(imageNamed: SpriteMap.PirataPernetaFrame.rawValue, aQtdFrames: 18, initialSpeed: 3, initialHealth: 7, scoreGenerated: 7)
+        if(canPlay) {
+            let pirataGerado = arc4random_uniform(10) + 1
+            var pirata:Pirata
+            if(pirataGerado > 3) {
+                pirata = Pirata(imageNamed: SpriteMap.PirataPeixeFrame.rawValue, aQtdFrames: 18, initialSpeed: 6, initialHealth: 3, scoreGenerated: 3)
+            } else {
+                pirata = Pirata(imageNamed: SpriteMap.PirataPernetaFrame.rawValue, aQtdFrames: 18, initialSpeed: 3, initialHealth: 7, scoreGenerated: 7)
+            }
+            pirata.anchorPoint = CGPointMake(0.5, 0.5)
+            pirata.position = CGPointMake(Device.screenSize.width + pirata.boundingBox().width / 2,
+                CGFloat(arc4random_uniform(UInt32((linhaEnergia?.boundingBox().height)!) - UInt32(pirata.boundingBox().width / 2)) + UInt32(pirata.boundingBox().width / 2)))
+            pirata.delegate = self
+            if(pirata.position.y < player!.position.y) {
+                physicsWorld.addChild(pirata, z: 4)
+            } else {
+                physicsWorld.addChild(pirata, z: 3)
+            }
+            pirata.mover(CGPointMake(0, pirata.position.y))
+            DelayHelper.sharedInstance.callFunc("gerarPirata", onTarget: self, withDelay: delayGeracaoPiratas)
         }
-        pirata.anchorPoint = CGPointMake(0.5, 0.5)
-        pirata.position = CGPointMake(Device.screenSize.width + pirata.boundingBox().width / 2,
-            CGFloat(arc4random_uniform(UInt32((linhaEnergia?.boundingBox().height)!) - UInt32(pirata.boundingBox().width / 2)) + UInt32(pirata.boundingBox().width / 2)))
-        pirata.delegate = self
-        if(pirata.position.y < player!.position.y) {
-            physicsWorld.addChild(pirata, z: 4)
-        } else {
-            physicsWorld.addChild(pirata, z: 3)
-        }
-        pirata.mover(CGPointMake(0, pirata.position.y))
-        DelayHelper.sharedInstance.callFunc("gerarPirata", onTarget: self, withDelay: delayGeracaoPiratas)
         
     }
     
@@ -218,9 +249,15 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         if(pirata.getAlive()) {
             score += pirata.receberDano(powerUPAtivo ? 3 : 1, podeGerarPowerUP: !powerUPVisivel && !powerUPAtivo)
             labelScore!.string = "Score: \(score)"
+            
+            if(score>=threashould) {
+                aumentarDificuldade()
+            }
+            
             tiro.stopAllActions()
             tiro.removeFromParentAndCleanup(true)
             if(!pirata.getAlive()) {
+                SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Puf)
                 gerarParticulas(pirata.position)
             }
         }
@@ -253,8 +290,68 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         powerUPAtivo = false
         player!.color = cor
     }
+    
+    func cruzouLimite() {
+        if(life > 1) {
+            life--
+            
+            if(life == 2) {
+                linhaEnergia = CCSprite(imageNamed: Device.getAssetByKey("energiaAmarela"))
+            } else if(life == 1) {
+                linhaEnergia = CCSprite(imageNamed: Device.getAssetByKey("energiaVermelha"))
+            }
+            
+            linhaEnergia!.anchorPoint = CGPointMake(0, 0)
+            linhaEnergia!.position = CGPointMake(0, 0)
+            self.addChild(linhaEnergia, z: 2)
+            
+        } else {
+            gameOver()
+        }
+    }
 
     override func update(delta: CCTime) {
+        
+    }
+    
+    func aumentarDificuldade() {
+        if(delayGeracaoPiratas > 2) {
+            delayGeracaoPiratas -= 0.2
+            threashould += 50
+        }
+    }
+    
+    func gameOver() {
+        
+        canPlay = false
+        canThrowAxe = false
+    
+        labelPauseGameOver!.string = "Game Over - Tap to back to menu"
+        labelPauseGameOver!.visible = true
+        
+        btnPause!.visible = false
+        btnQuit!.visible = false
+        
+        for node in self.physicsWorld.children {
+            if(node.isKindOfClass(Tiro)) {
+                node.stopAllActions()
+            } else if(node.isKindOfClass(Pirata)) {
+                (node as! Pirata).stop()
+            }
+        }
+        
+        for node in self.children {
+            if(node.isKindOfClass(CCParticleExplosion)) {
+                node.stopAllActions()
+            }
+        }
+        
+        let highScore:Int = NSUserDefaults.standardUserDefaults().valueForKey("highScore") as! Int
+        if(highScore < score) {
+            NSUserDefaults.standardUserDefaults().setInteger(score, forKey: "highScore")
+            labelScore!.color = CCColor.redColor()
+            labelScore!.string = "HIGH SCORE ACHIEVED: \(score)!!!"
+        }
         
     }
     

@@ -34,8 +34,12 @@ class SoundplayHelper {
         SoundplayHelper.instance.bgVolume = 0.5
     }
     
+    func setMusicVolume(volume:Float) {
+         SoundplayHelper.instance.bgVolume = volume
+    }
+    
     func playMusic() {
-        SoundplayHelper.instance.playBg()
+        SoundplayHelper.instance.playBgWithLoop(true)
     }
     
     func playEffect(effect:SoundplayHelperEffect) {

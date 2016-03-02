@@ -9,6 +9,7 @@
 protocol PirataDelegate {
     func powerUPGerado()
     func powerUPConsumido()
+    func cruzouLimite()
 }
 
 import Foundation
@@ -77,6 +78,7 @@ class Pirata : CCNode {
     func mover(destino:CGPoint) {
         let action = CCActionSequence(one: CCActionMoveTo(duration: CCTime(10 - speed!), position: destino),
             two: CCActionCallBlock(block: { () -> Void in
+                self.delegate?.cruzouLimite()
                 self.sprite!.stopAllActions()
                 self.removeFromParentAndCleanup(true)
             }
@@ -124,6 +126,11 @@ class Pirata : CCNode {
     
     func getAlive() -> Bool {
         return isAlive
+    }
+    
+    func stop() {
+        self.stopAllActions()
+        self.sprite!.stopAllActions()
     }
     
     override func touchBegan(touch: UITouch!, withEvent event: UIEvent!) {
