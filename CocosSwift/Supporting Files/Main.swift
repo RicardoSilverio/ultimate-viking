@@ -32,6 +32,10 @@ import Foundation
 	
 	override func applicationDidEnterBackground(application:UIApplication) {
 		print("Enter Background")
+        let scene = CCDirector.sharedDirector().runningScene
+        if(scene.isKindOfClass(GameScene)) {
+            (scene as! GameScene).pauseGame()
+        }
 	}
 	
 	override func applicationWillEnterForeground(application:UIApplication) {

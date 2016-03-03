@@ -29,7 +29,7 @@ class Tiro : CCNode {
         self.physicsBody.type = .Kinematic
         self.physicsBody.collisionType = "Tiro"
         self.physicsBody.collisionCategories = ["tiro"]
-        self.physicsBody.collisionMask = ["pirata"]
+        self.physicsBody.collisionMask = ["pirata", "borda"]
         self.physicsBody.mass = 100
         
         

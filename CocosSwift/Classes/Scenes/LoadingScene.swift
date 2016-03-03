@@ -83,7 +83,7 @@ class LoadingScene : CCScene {
                 Device.putAssetDimensionKey("viking:margin:Game", withValue: 35)
                 Device.putAssetDimensionKey("pirataPerneta:Home", withValue: 0.5)
                 Device.putAssetDimensionKey("pirataPeixe:Home", withValue: 0.5)
-                Device.putAssetDimensionKey("pirata:Game", withValue: 0.4)
+                Device.putAssetDimensionKey("pirata:Game", withValue: 0.3)
                 Device.putAssetDimensionKey("tiro:Game", withValue: 1)
                 Device.putAssetDimensionKey("score:Game", withValue: 15)
                 Device.putAssetDimensionKey("button:Game", withValue: 10)

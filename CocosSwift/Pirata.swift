@@ -38,7 +38,6 @@ class Pirata : CCNode {
         self.sprite!.scale = Device.getAssetDimensionByKey("pirata:Game")
         self.addChild(self.sprite, z: 3)
         
-        self.userInteractionEnabled = true
         self.contentSize = (sprite?.boundingBox().size)!
         
         self.physicsBody = CCPhysicsBody(rect: CGRectMake(0, 0, self.contentSize.width, self.contentSize.height), cornerRadius: 0)
@@ -98,6 +97,7 @@ class Pirata : CCNode {
                 let indicePowerUP = arc4random_uniform(10) + 1
                 if(podeGerarPowerUP && indicePowerUP == 10) {
                     isPowerUP = true
+                    self.userInteractionEnabled = true
                     sprite!.removeFromParentAndCleanup(true)
                     sprite = CCSprite(imageNamed: SpriteMap.PowerUp.rawValue)
                     sprite!.position = CGPointMake(0, 0)
@@ -135,7 +135,9 @@ class Pirata : CCNode {
     
     override func touchBegan(touch: UITouch!, withEvent event: UIEvent!) {
         
-        if(!isAlive && isPowerUP) {
+        let currentScene = CCDirector.sharedDirector().runningScene as! GameScene
+        
+        if(!isAlive && isPowerUP && !currentScene.getPaused()) {
             sprite!.visible = false
             self.removeFromParentAndCleanup(true)
             delegate?.powerUPConsumido()

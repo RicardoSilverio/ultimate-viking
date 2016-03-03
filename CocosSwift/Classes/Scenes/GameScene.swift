@@ -63,23 +63,9 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         btnPause!.color = CCColor.blackColor()
         btnPause!.block = {_ in
             if(!self.isPaused) {
-                CCDirector.sharedDirector().pause()
-                SoundplayHelper.sharedInstance.setMusicVolume(0.1)
-                SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
-                self.canPlay = false
-                self.isPaused = true
-                self.btnPause!.title = "[ Continue ]"
-                self.labelPauseGameOver!.string = "*** Game paused ***"
-                self.labelPauseGameOver!.visible = true
+                self.pauseGame()
             } else {
-                CCDirector.sharedDirector().resume()
-                SoundplayHelper.sharedInstance.setMusicDefaultVolume()
-                SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
-                self.canPlay = true
-                self.isPaused = false
-                self.btnPause!.title = "[ Pause ]"
-                self.labelPauseGameOver!.string = ""
-                self.labelPauseGameOver!.visible = true
+                self.continueGame()
             }
         }
         self.addChild(btnPause, z:5)
@@ -90,6 +76,7 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         btnQuit!.color = CCColor.blackColor()
         btnQuit!.block = {_ in
             SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
+            CCDirector.sharedDirector().resume()
             StateMachine.sharedInstance.changeScene(StateMachineScenes.HomeScene, isFade: false)
         }
         self.addChild(btnQuit, z:5)
@@ -97,7 +84,7 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         let background = CCSprite(imageNamed: Device.getAssetByKey("cenario"))
         background.anchorPoint = CGPointMake(0.5, 0.5)
         background.position = CGPointMake(Device.screenSize.width / 2, Device.screenSize.height / 2)
-        self.addChild(background)
+        self.addChild(background, z:0)
         
         player = CCSprite(imageNamed: SpriteMap.Player.rawValue)
         cor = player!.color
@@ -116,7 +103,22 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         
         self.userInteractionEnabled = true
         
-        
+        let piso = CCNode()
+        piso!.physicsBody = CCPhysicsBody(rect: CGRectMake(0, 0, Device.screenSize.width, 5), cornerRadius: 0)
+        piso!.physicsBody.type = .Static
+        piso!.physicsBody.collisionType = "Borda"
+        piso!.physicsBody.collisionCategories = ["borda"]
+        piso!.physicsBody.collisionMask = ["tiro"]
+        piso.color = CCColor.orangeColor()
+        physicsWorld.addChild(piso)
+
+        let bordaDireita = CCNode()
+        bordaDireita!.physicsBody = CCPhysicsBody(rect: CGRectMake(Device.screenSize.width - 5, 0, 5, Device.screenSize.height), cornerRadius: 0)
+        bordaDireita!.physicsBody.type = .Static
+        bordaDireita!.physicsBody.collisionType = "Borda"
+        bordaDireita!.physicsBody.collisionCategories = ["borda"]
+        bordaDireita!.physicsBody.collisionMask = ["tiro"]
+        physicsWorld.addChild(bordaDireita)
     }
     
     func getFinalX(point:CGPoint, distance:CGFloat, finalHeight:CGFloat) -> CGFloat {
@@ -264,6 +266,14 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         return true
     }
     
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, Tiro tiro:Tiro!, Borda borda:CCNode!) -> Bool {
+        if(tiro != nil) {
+            tiro.removeFromParentAndCleanup(true)
+            print("Tiro removido: \(tiro.position)")
+        }
+        return true
+    }
+    
     private func gerarParticulas(position:CGPoint) {
         let splash = CCParticleExplosion(totalParticles: 20)
         splash.texture = CCSprite.spriteWithImageNamed(SpriteMap.Fire.rawValue).texture
@@ -284,6 +294,7 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
         powerUPAtivo = true
         player!.color = CCColor.redColor()
         DelayHelper.sharedInstance.callFunc("desativarPowerUP", onTarget: self, withDelay: 10)
+        SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
     }
     
     func desativarPowerUP() {
@@ -353,6 +364,32 @@ class GameScene : CCScene, PirataDelegate, CCPhysicsCollisionDelegate {
             labelScore!.string = "HIGH SCORE ACHIEVED: \(score)!!!"
         }
         
+    }
+    
+    func pauseGame() {
+        CCDirector.sharedDirector().pause()
+        SoundplayHelper.sharedInstance.setMusicVolume(0.1)
+        SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
+        self.canPlay = false
+        self.isPaused = true
+        self.btnPause!.title = "[ Continue ]"
+        self.labelPauseGameOver!.string = "*** Game paused ***"
+        self.labelPauseGameOver!.visible = true
+    }
+    
+    func continueGame() {
+        CCDirector.sharedDirector().resume()
+        SoundplayHelper.sharedInstance.setMusicDefaultVolume()
+        SoundplayHelper.sharedInstance.playEffect(SoundplayHelperEffect.Tap)
+        self.canPlay = true
+        self.isPaused = false
+        self.btnPause!.title = "[ Pause ]"
+        self.labelPauseGameOver!.string = ""
+        self.labelPauseGameOver!.visible = true
+    }
+    
+    func getPaused() -> Bool {
+        return isPaused
     }
     
     override func onExit() {
